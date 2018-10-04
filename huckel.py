@@ -26,7 +26,7 @@ def degen(evals):
     Returns number of degeneracies for each eigenvalue
 
     """
-    eps = 10e-5  # Threshold for energy differences to be considered degenerate
+    eps = 10e-7  # Threshold for energy differences to be considered degenerate
     deg = 1
     result = []
     for i in range(evals.size - 1):
@@ -61,10 +61,10 @@ def adj_cyclic(n):
 # Runs the program for now
 
 
-mol = adj_cyclic(6)  # Initialzie test allyl molecule
+mol = adj_cyclic(5)  # Initialzie test allyl molecule
 evals = get_evals(mol)
 result = degen(evals)
 
 print(f'{"Energy":10}', f'{"Degeneracy":10}')
 for a, b in result:
-    print(f"{a:<10.3f}", b)
+    print(f"A{a:+.3f}*B", f'{b:^10}')
