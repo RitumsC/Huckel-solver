@@ -74,11 +74,11 @@ def return_result(matrix):
 def main():
     arguments = sys.argv[1:]
     if arguments[0] == 'linear':
-        return_result(adj_linear(arguments[1]))
+        return_result(adj_linear(int(arguments[1])))
     elif arguments[0] == 'cyclic':
-        return_result(adj_cyclic(arguments[1]))
+        return_result(adj_cyclic(int(arguments[1])))
     else:
-        return_result(np.loadtxt(arguments[0]))
+        return_result(np.loadtxt(arguments[0]+'.txt'))
 
 
 if __name__ == '__main__':
