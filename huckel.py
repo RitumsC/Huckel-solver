@@ -38,31 +38,33 @@ def degen(evals):
     result.append((evals[-1], deg))
     return result
 
+
+def adj_linear(n):
+    """
+    Creates adjacency matrix for linear polyene consiting of n atoms
+
+    """
+    matrix = np.eye(n, n, 1) + np.eye(n, n, -1)
+
+    return matrix
+
+
+def adj_cyclic(n):
+    """
+    Creates adjacency matrix for cyclic polyene consiting of n atoms
+
+    """
+    matrix = adj_linear(n) + np.eye(n, n, n-1) + np.eye(n, n, -n+1)
+
+    return matrix
+
 # Runs the program for now
 
 
-mol = np.matrix(
-        '0 1 0 0 0 0 \
-        ;1 0 1 0 0 0 \
-        ;0 1 0 1 0 0 \
-        ;0 0 1 0 1 0 \
-        ;0 0 0 1 0 1 \
-        ;0 0 0 0 1 0 ')  # Initialzie test allyl molecule
+mol = adj_cyclic(6)  # Initialzie test allyl molecule
 evals = get_evals(mol)
 result = degen(evals)
 
 print(f'{"Energy":10}', f'{"Degeneracy":10}')
 for a, b in result:
     print(f"{a:<10.3f}", b)
-
-
-
-
-
-
-
-
-
-
-
-
