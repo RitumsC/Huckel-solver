@@ -68,17 +68,35 @@ def return_result(matrix):
     result = degen(evals)
     print(f'{"Energy":10}', f'{"Degeneracy":10}')
     for a, b in result:
-        print(f"A{a:+.3f}*B", f'{b:^10}')
+        print(f"A{-a:+.3f}*B", f'{b:^10}')
 
 
 def main():
     arguments = sys.argv[1:]
     if arguments[0] == 'linear':
-        return_result(adj_linear(int(arguments[1])))
+        try:
+            print("The Huckel energies "
+                  f"for linear polyene with {arguments[1]} carbons.\n")
+            return_result(adj_linear(int(arguments[1])))
+        except IndexError:
+            print('You must supply the numer of atoms in the chain')
+            print('e.g. : "python3 huckel.py linear 5"')
     elif arguments[0] == 'cyclic':
-        return_result(adj_cyclic(int(arguments[1])))
+        try:
+            print("The Huckel energies "
+                  f"for cyclic polyene with {arguments[1]} carbons.\n")
+            return_result(adj_cyclic(int(arguments[1])))
+        except IndexError:
+            print('You must supply the numer of atoms in the cycle')
+            print('e.g. : "python3 huckel.py cyclic 5"')
     else:
-        return_result(np.loadtxt(arguments[0]+'.txt'))
+        try:
+            print("The Huckel energies "
+                  f"for  {arguments[0]}.\n")
+            return_result(np.loadtxt(arguments[0]+'.txt'))
+        except OSError:
+            print('No adjacency matrix supplied,\
+                  check the argument filename')
 
 
 if __name__ == '__main__':
