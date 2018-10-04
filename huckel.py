@@ -1,30 +1,43 @@
 """General Huckel solver
 
-Usage:    Edit the mol assignment for the desired adjaceny matrix that
-            describes the molecule. For the given adjacency matrix the program
-                calculates the Huckel energies and their degeneracies.
-                    Results are displayed in a table.
+Run in command line:
+    $python3 huckel.py mode n
+
+Arguments:
+    mode
+        Decides which task to do, posibilities:
+           linear
+           chain
+           name of text file that contains the adjacency matrix of atoms
+    n
+        Number of atoms to be considered, only used for linear/chain mode.
+
+For Platonic solids and Buckinsterfullerene the adjaceny matrix are prepared
+and kept in the same git repository.
+
+Example command lines:
+     $python3 huckel.py linear 5
+     $python3 huckel.py cylic 4
+     $python3 huckel.py cube
 """
 
 import numpy as np
 import sys
 
 
-def get_evals(matrix):
-    """
-    Get eigenvalues of Huckel matrix from the adjacency matrix
+def get_evals(adjMatrix):
+    """Get eigenvalues of Huckel matrix from the adjacency matrix
 
     """
-
-    hMatrix = np.multiply(-1, matrix)
+    hMatrix = np.multiply(-1, adjMatrix)
     evals, evecs = np.linalg.eig(hMatrix)
     evals.sort()
-    return evals
+
+    return evals[::-1]
 
 
 def degen(evals):
-    """
-    Returns number of degeneracies for each eigenvalue
+    """Returns list of pairs listing degeneracies for each eigenvalue
 
     """
     eps = 10e-7  # Threshold for energy differences to be considered degenerate
@@ -37,12 +50,12 @@ def degen(evals):
             result.append((evals[i], deg))
             deg = 1
     result.append((evals[-1], deg))
+
     return result
 
 
 def adj_linear(n):
-    """
-    Creates adjacency matrix for linear polyene consiting of n atoms
+    """Creates adjacency matrix for linear polyene consiting of n atoms
 
     """
     matrix = np.eye(n, n, 1) + np.eye(n, n, -1)
@@ -51,8 +64,7 @@ def adj_linear(n):
 
 
 def adj_cyclic(n):
-    """
-    Creates adjacency matrix for cyclic polyene consiting of n atoms
+    """Creates adjacency matrix for cyclic polyene consiting of n atoms
 
     """
     matrix = adj_linear(n) + np.eye(n, n, n-1) + np.eye(n, n, -n+1)
@@ -60,14 +72,14 @@ def adj_cyclic(n):
     return matrix
 
 
-def return_result(matrix):
+def return_result(adjMatrix):
+    """Prints the result given the adjacency matrix
+
     """
-    Prints the result given the adjacency matrix
-    """
-    evals = get_evals(matrix)
-    result = degen(evals)
-    print(f'{"Energy":10}', f'{"Degeneracy":10}')
-    for a, b in result:
+    evals = get_evals(adjMatrix)
+    degEvals = degen(evals)
+    print(f'{"Energy":10}', f'{"Degeneracy"}')
+    for a, b in degEvals:
         print(f"A{-a:+.3f}*B", f'{b:^10}')
 
 
@@ -95,8 +107,8 @@ def main():
                   f"for  {arguments[0]}.\n")
             return_result(np.loadtxt(arguments[0]+'.txt'))
         except OSError:
-            print('No adjacency matrix supplied,\
-                  check the argument filename')
+            print("No adjacency matrix supplied, "
+                  "check typos or create new adjacency matrix")
 
 
 if __name__ == '__main__':
