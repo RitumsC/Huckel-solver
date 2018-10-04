@@ -7,6 +7,7 @@ Usage:    Edit the mol assignment for the desired adjaceny matrix that
 """
 
 import numpy as np
+import sys
 
 
 def get_evals(matrix):
@@ -58,13 +59,27 @@ def adj_cyclic(n):
 
     return matrix
 
-# Runs the program for now
+
+def return_result(matrix):
+    """
+    Prints the result given the adjacency matrix
+    """
+    evals = get_evals(matrix)
+    result = degen(evals)
+    print(f'{"Energy":10}', f'{"Degeneracy":10}')
+    for a, b in result:
+        print(f"A{a:+.3f}*B", f'{b:^10}')
 
 
-mol = adj_cyclic(5)  # Initialzie test allyl molecule
-evals = get_evals(mol)
-result = degen(evals)
+def main():
+    arguments = sys.argv[1:]
+    if arguments[0] == 'linear':
+        return_result(adj_linear(arguments[1]))
+    elif arguments[0] == 'cyclic':
+        return_result(adj_cyclic(arguments[1]))
+    else:
+        return_result(np.loadtxt(arguments[0]))
 
-print(f'{"Energy":10}', f'{"Degeneracy":10}')
-for a, b in result:
-    print(f"A{a:+.3f}*B", f'{b:^10}')
+
+if __name__ == '__main__':
+    main()
