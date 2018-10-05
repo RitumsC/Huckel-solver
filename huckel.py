@@ -28,17 +28,18 @@ import sys
 def get_evals(adjMatrix):
     """Get eigenvalues of Huckel matrix from the adjacency matrix
 
+	hMatrix = adjMatrix * (-1)
     """
-    hMatrix = np.multiply(-1, adjMatrix)
-    evals, evecs = np.linalg.eig(hMatrix)
+    evals, evecs = np.linalg.eig(adjMatrix)
     evals.sort()
 
-    return evals[::-1]
+    return (-1)*evals
 
 
 def degen(evals):
     """Returns list of pairs listing degeneracies for each eigenvalue
-
+	
+	Must take in sorted evals
     """
     eps = 10e-7  # Threshold for energy differences to be considered degenerate
     deg = 1
@@ -80,7 +81,7 @@ def return_result(adjMatrix):
     degEvals = degen(evals)
     print(f'{"Energy":10}', f'{"Degeneracy"}')
     for a, b in degEvals:
-        print(f"A{-a:+.3f}*B", f'{b:^10}')
+        print(f"A{-a.real:+.3f}*B", f'{b:^10}')
 
 
 def main():
