@@ -19,6 +19,7 @@ Example command lines:
      $python3 huckel.py linear 5
      $python3 huckel.py cylic 4
      $python3 huckel.py cube
+     $python3 huckel.py Buckminsterfullerene
 """
 
 import numpy as np
